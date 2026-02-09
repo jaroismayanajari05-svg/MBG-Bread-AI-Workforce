@@ -10,7 +10,8 @@ node_modules/
 frontend/dist/
 
 # Database
-*.db
+# *.db  <-- Uncommented to allow pushing local DB to Railway (for demo purpose)
+
 
 # IDE
 .vscode/
