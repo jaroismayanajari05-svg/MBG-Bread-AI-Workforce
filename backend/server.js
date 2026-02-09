@@ -33,6 +33,17 @@ app.use((req, res, next) => {
 app.use('/api/leads', leadsRoutes);
 app.use('/api/automation', agentsRoutes);
 
+// Root endpoint
+app.get('/', (req, res) => {
+    res.json({
+        message: 'MBG Bread AI Workforce API Running',
+        endpoints: {
+            health: '/api/health',
+            documentation: 'See frontend'
+        }
+    });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
     res.json({
