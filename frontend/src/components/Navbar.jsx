@@ -19,7 +19,7 @@ function Navbar() {
                     </li>
                     <li>
                         <NavLink
-                            to="/dapur"
+                            to="/leads"
                             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                         >
                             Daftar Dapur

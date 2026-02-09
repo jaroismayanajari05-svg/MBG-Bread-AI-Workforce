@@ -11,8 +11,8 @@ function App() {
             <main className="main-content">
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
-                    <Route path="/dapur" element={<Leads />} />
-                    <Route path="/dapur/:id" element={<LeadDetail />} />
+                    <Route path="/leads" element={<Leads />} />
+                    <Route path="/leads/:id" element={<LeadDetail />} />
                 </Routes>
             </main>
         </div>

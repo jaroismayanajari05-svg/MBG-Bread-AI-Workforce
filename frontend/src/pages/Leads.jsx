@@ -42,75 +42,59 @@ export default function Leads() {
     }
 
     return (
-        <div className="app">
-            <nav className="navbar">
-                <div className="navbar-content">
-                    <Link to="/" className="navbar-brand">
-                        🍞 <span>MBG Bread Workforce</span>
+        <div className="table-container">
+            <div className="table-header">
+                <h2 className="table-title">Daftar Dapur MBG</h2>
+                <div className="table-filters">
+                    <select
+                        className="filter-select"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    >
+                        <option value="">Semua Status</option>
+                        <option value="Belum Dihubungi">🟡 Belum Dihubungi</option>
+                        <option value="Sudah Dikirimi">✉️ Sudah Dikirimi</option>
+                        <option value="Tertarik">⭐ Tertarik</option>
+                    </select>
+                </div>
+            </div>
+
+            {loading ? (
+                <div className="loading-overlay">
+                    <div className="loading-spinner"></div>
+                    <p>Memuat data...</p>
+                </div>
+            ) : leads.length === 0 ? (
+                <div className="empty-state">
+                    <div className="empty-state-icon">📋</div>
+                    <p>Belum ada data Dapur MBG</p>
+                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginTop: 'var(--spacing-sm)' }}>
+                        Klik "Mulai Cari & Kirim Penawaran" di Beranda untuk mencari Dapur MBG
+                    </p>
+                    <Link to="/" className="btn btn-primary" style={{ marginTop: 'var(--spacing-lg)' }}>
+                        Kembali ke Beranda
                     </Link>
-                    <ul className="navbar-nav">
-                        <li><Link to="/" className="nav-link">Beranda</Link></li>
-                        <li><Link to="/leads" className="nav-link active">Daftar Dapur</Link></li>
-                    </ul>
                 </div>
-            </nav>
-
-            <main className="main-content">
-                <div className="table-container">
-                    <div className="table-header">
-                        <h2 className="table-title">Daftar Dapur MBG</h2>
-                        <div className="table-filters">
-                            <select
-                                className="filter-select"
-                                value={filter}
-                                onChange={(e) => setFilter(e.target.value)}
-                            >
-                                <option value="">Semua Status</option>
-                                <option value="Belum Dihubungi">🟡 Belum Dihubungi</option>
-                                <option value="Sudah Dikirimi">✉️ Sudah Dikirimi</option>
-                                <option value="Tertarik">⭐ Tertarik</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {loading ? (
-                        <div className="loading-overlay">
-                            <div className="loading-spinner"></div>
-                            <p>Memuat data...</p>
-                        </div>
-                    ) : leads.length === 0 ? (
-                        <div className="empty-state">
-                            <div className="empty-state-icon">📋</div>
-                            <p>Belum ada data Dapur MBG</p>
-                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginTop: 'var(--spacing-sm)' }}>
-                                Klik "Mulai Cari & Kirim Penawaran" di Beranda untuk mencari Dapur MBG
-                            </p>
-                            <Link to="/" className="btn btn-primary" style={{ marginTop: 'var(--spacing-lg)' }}>
-                                Kembali ke Beranda
-                            </Link>
-                        </div>
-                    ) : (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nama Dapur</th>
-                                    <th>Kota</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {leads.map((lead) => (
-                                    <tr key={lead.id} onClick={() => navigate(`/leads/${lead.id}`)}>
-                                        <td style={{ fontWeight: 500 }}>{lead.nama_sppg}</td>
-                                        <td>{lead.kab_kota}</td>
-                                        <td>{getStatusBadge(lead.status)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            </main>
+            ) : (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Dapur</th>
+                            <th>Kota</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {leads.map((lead) => (
+                            <tr key={lead.id} onClick={() => navigate(`/leads/${lead.id}`)}>
+                                <td style={{ fontWeight: 500 }}>{lead.nama_sppg}</td>
+                                <td>{lead.kab_kota}</td>
+                                <td>{getStatusBadge(lead.status)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
