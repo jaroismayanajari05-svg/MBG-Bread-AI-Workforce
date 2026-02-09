@@ -53,7 +53,7 @@ function LeadsTable({ leads, loading }) {
             </thead>
             <tbody>
                 {leads.map((lead) => (
-                    <tr key={lead.id} onClick={() => navigate(`/dapur/${lead.id}`)}>
+                    <tr key={lead.id} onClick={() => navigate(`/leads/${lead.id}`)}>
                         <td>{lead.nama_sppg}</td>
                         <td>{lead.kab_kota || '-'}</td>
                         <td>
