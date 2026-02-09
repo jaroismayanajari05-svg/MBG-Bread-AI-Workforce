@@ -121,6 +121,13 @@ async function runFullWorkflow() {
                 if (sendResult.success) {
                     result.summary.messagesSent++;
                 }
+
+                // Jeda Manusiawi (Human-like Delay) agar tidak dianggap spam
+                // Random antara 5 sampai 15 detik per pesan
+                const delay = Math.floor(Math.random() * (15000 - 5000 + 1) + 5000);
+                console.log(`[Orchestrator] Menunggu ${delay / 1000} detik sebelum pesan berikutnya...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+
             } catch (err) {
                 console.error(`[Orchestrator] Send error for lead ${lead.id}:`, err);
                 sendResults.push({

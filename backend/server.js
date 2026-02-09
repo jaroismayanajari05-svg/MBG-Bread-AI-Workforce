@@ -29,12 +29,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serve static files from React frontend
+app.use(express.static(join(__dirname, 'public')));
+
 // API Routes
 app.use('/api/leads', leadsRoutes);
 app.use('/api/automation', agentsRoutes);
 
-// Root endpoint
-app.get('/', (req, res) => {
+// Root endpoint (API Info)
+app.get('/api', (req, res) => {
     res.json({
         message: 'MBG Bread AI Workforce API Running',
         endpoints: {
@@ -49,9 +52,13 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
         name: 'MBG Bread AI Workforce',
-        version: '1.0.0',
-        timestamp: new Date().toISOString()
+        uptime: process.uptime()
     });
+});
+
+// Handle React routing, return all other requests to React app
+app.get('*', (req, res) => {
+    res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 
 // Error handling
