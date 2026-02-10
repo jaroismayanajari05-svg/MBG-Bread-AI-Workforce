@@ -143,70 +143,9 @@ async function findAndSaveLeads() {
  * Discover leads from sources
  */
 async function discoverLeads() {
-    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-    const hasGoogleMaps = apiKey && apiKey !== 'your_google_maps_api_key_here';
-
-    if (hasGoogleMaps) {
-        console.log('[LeadLocator] Google Maps API available - Starting REAL search...');
-        try {
-            // Keywords to search for potential SPPG/Kitchens
-            const keywords = ['Catering Sekolah', 'Dapur Catering', 'Penyedia Makan Siang'];
-            // Sample locations to search in (in production this could be dynamic)
-            const locations = ['Jakarta', 'Bandung', 'Surabaya'];
-
-            let allRealLeads = [];
-
-            for (const location of locations) {
-                for (const keyword of keywords) {
-                    console.log(`[LeadLocator] Searching: "${keyword}" in ${location}...`);
-                    const query = `${keyword} in ${location}`;
-                    const url = `https://places.googleapis.com/v1/places:searchText`;
-
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Goog-Api-Key': apiKey,
-                            'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
-                        },
-                        body: JSON.stringify({
-                            textQuery: query,
-                            maxResultCount: 5
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.places && data.places.length > 0) {
-                        const mappedLeads = data.places.map(place => ({
-                            nama_sppg: place.displayName?.text || 'Unknown SPPG',
-                            alamat: place.formattedAddress || 'Alamat tidak tersedia',
-                            provinsi: 'Indonesia', // Simplification
-                            kab_kota: location,
-                            kecamatan: '',
-                            desa: '',
-                            phone: place.nationalPhoneNumber || '',
-                            confidence_score: 0.95
-                        }));
-                        allRealLeads = [...allRealLeads, ...mappedLeads];
-                    }
-                }
-            }
-
-            if (allRealLeads.length > 0) {
-                console.log(`[LeadLocator] Found ${allRealLeads.length} leads via Google Maps API`);
-                return allRealLeads;
-            } else {
-                console.log('[LeadLocator] API returned no results, falling back to sample data.');
-            }
-
-        } catch (error) {
-            console.error('[LeadLocator] Google Maps API Error:', error);
-            console.log('[LeadLocator] Falling back to sample data due to error.');
-        }
-    }
-
     console.log('[LeadLocator] Using sample SPPG data (Simulation Mode)');
+    // In the new architecture, leads come from 'scraped_bgn.js' -> 'import_leads.js'.
+    // This function is kept for backward compatibility/simulation.
     return SAMPLE_SPPG_DATA;
 }
 

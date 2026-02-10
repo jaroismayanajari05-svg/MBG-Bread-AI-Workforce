@@ -15,6 +15,7 @@ config({ path: join(__dirname, '..', '.env') });
 
 import leadsRoutes from './routes/leads.js';
 import agentsRoutes from './routes/agents.js';
+import webhookRoutes from './routes/webhook.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -35,6 +36,7 @@ app.use(express.static(join(__dirname, 'public')));
 // API Routes
 app.use('/api/leads', leadsRoutes);
 app.use('/api/automation', agentsRoutes);
+app.use('/api/webhook', webhookRoutes);
 
 // Root endpoint (API Info)
 app.get('/api', (req, res) => {
