@@ -76,4 +76,25 @@ router.post('/send/:id', async (req, res) => {
     }
 });
 
+import contactScanner from '../agents/contactScanner.js';
+
+// ... existing code ...
+
+/**
+ * POST /api/automation/scan-contact/:id
+ * Trigger OSINT contact scan for a lead
+ */
+router.post('/scan-contact/:id', async (req, res) => {
+    try {
+        const result = await contactScanner.findContact(req.params.id);
+        res.json({ success: true, data: result });
+    } catch (err) {
+        console.error('[API] Scan contact error:', err);
+        res.status(500).json({
+            success: false,
+            error: err.message || 'Gagal mencari kontak'
+        });
+    }
+});
+
 export default router;

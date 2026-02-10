@@ -39,5 +39,9 @@ export const api = {
 
     sendMessage: (id) => request(`/automation/send/${id}`, {
         method: 'POST'
+    }),
+
+    scanContact: (id) => request(`/automation/scan-contact/${id}`, {
+        method: 'POST'
     })
 };

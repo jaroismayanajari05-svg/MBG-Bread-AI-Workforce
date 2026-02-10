@@ -10,7 +10,26 @@ export default function LeadDetail() {
     const [editedMessage, setEditedMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isScanning, setIsScanning] = useState(false);
     const [notification, setNotification] = useState(null);
+
+    async function handleScanContact() {
+        setIsScanning(true);
+        try {
+            showNotification('Sedang mencari kontak di internet...', 'info');
+            const res = await api.scanContact(id);
+            if (res.success && res.data.success) {
+                await loadLead();
+                showNotification(`Ditemukan: ${res.data.phone}`, 'success');
+            } else {
+                showNotification(res.data?.message || 'Kontak tidak ditemukan', 'warning');
+            }
+        } catch (err) {
+            showNotification('Gagal melakukan scanning', 'error');
+        } finally {
+            setIsScanning(false);
+        }
+    }
 
     useEffect(() => {
         loadLead();
@@ -139,7 +158,27 @@ export default function LeadDetail() {
                         </div>
                         <div className="info-item">
                             <div className="info-label">Telepon</div>
-                            <div className="info-value">{lead.phone || '-'}</div>
+                            <div className="info-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {lead.phone || '-'}
+                                {!lead.phone && (
+                                    <button
+                                        onClick={handleScanContact}
+                                        disabled={isScanning}
+                                        className="btn-xs"
+                                        title="Cari kontak otomatis di internet"
+                                        style={{
+                                            padding: '2px 8px',
+                                            fontSize: '11px',
+                                            background: 'var(--color-bg-secondary)',
+                                            border: '1px solid var(--color-border)',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {isScanning ? '🔍' : '🕵️ Scan Web'}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div className="info-item">
                             <div className="info-label">Kecamatan</div>
