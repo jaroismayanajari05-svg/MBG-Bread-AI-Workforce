@@ -18,14 +18,15 @@ export default function LeadDetail() {
         try {
             showNotification('Sedang mencari kontak di internet...', 'info');
             const res = await api.scanContact(id);
-            if (res.success && res.data.success) {
+            if (res.success && res.data && res.data.success) {
                 await loadLead();
                 showNotification(`Ditemukan: ${res.data.phone}`, 'success');
             } else {
-                showNotification(res.data?.message || 'Kontak tidak ditemukan', 'warning');
+                showNotification(res.error || res.data?.message || 'Kontak tidak ditemukan', 'warning');
             }
         } catch (err) {
-            showNotification('Gagal melakukan scanning', 'error');
+            console.error('Scan Error:', err);
+            showNotification('Gagal melakukan scanning: ' + (err.message || 'Error tidak diketahui'), 'error');
         } finally {
             setIsScanning(false);
         }

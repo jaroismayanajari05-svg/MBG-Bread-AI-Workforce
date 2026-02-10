@@ -37,19 +37,23 @@ async function findContact(leadId) {
             console.log(`[ContactScanner] Searching: ${query}`);
             const results = await googleSearch(query);
 
-            // Visit top 3 results
-            for (const result of results.slice(0, 3)) {
+            // Visit top 2 results (optimized for speed)
+            for (const result of results.slice(0, 2)) {
                 console.log(`[ContactScanner] Visiting: ${result.link}`);
-                const phone = await scrapePhoneFromUrl(result.link);
+                try {
+                    const phone = await scrapePhoneFromUrl(result.link);
 
-                if (phone) {
-                    foundPhone = phone;
-                    sourceUrl = result.link;
-                    break;
+                    if (phone) {
+                        foundPhone = phone;
+                        sourceUrl = result.link;
+                        break;
+                    }
+                } catch (scrapeErr) {
+                    console.error(`[ContactScanner] Failed to scrape ${result.link}:`, scrapeErr.message);
                 }
 
-                // Random delay between requests to be polite
-                await delay(Math.random() * 3000 + 2000);
+                // Reduced delay (1-2s) to avoid timeout
+                await delay(Math.random() * 1000 + 1000);
             }
         } catch (err) {
             console.error(`[ContactScanner] Error on query "${query}":`, err.message);
@@ -108,7 +112,12 @@ async function googleSearch(query) {
         });
 
         return results;
+        return results;
     } catch (err) {
+        if (err.response && err.response.status === 429) {
+            console.error('[ContactScanner] RATE LIMITED by Google (429).');
+            throw new Error('Google Search Rate Limit (429)');
+        }
         console.error('[ContactScanner] Search blocked or failed:', err.message);
         return [];
     }
